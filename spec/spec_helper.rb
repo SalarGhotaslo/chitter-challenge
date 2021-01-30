@@ -14,7 +14,6 @@ Capybara.app = Chitter
 
 ### the rest of the file ###
 
-
 require 'simplecov'
 require 'simplecov-console'
 

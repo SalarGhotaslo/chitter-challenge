@@ -1,20 +1,30 @@
 require 'sinatra/base'
 
 class Chitter < Sinatra::Base
-    enable :sessions
+  enable :sessions
   get '/' do
-    'Hello World'
     erb(:index)
   end
 
-  post '/signup' do
+  post '/enter_user_info' do
     session[:username_login] = params[:username]
-   redirect '/logged_in'
+    redirect '/signed_up'
   end
 
-  get '/logged_in' do
+  get '/signed_up' do
     @username = session[:username_login]
-    erb(:logged_in)
+    erb(:signed_up)
   end
+
+  post '/peeps' do
+   session[:peep] = params[:message_box]
+   redirect '/chitter'
+  end
+
+  get '/chitter' do
+    @message_box = session[:peep]
+    erb(:chitter)
+  end
+
   run! if app_file == $0
 end
