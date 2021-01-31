@@ -1,7 +1,10 @@
+require 'pg'
+
 class Peep
-def self.all
-    ["Can you see this message?",
-    "This is another peep message"
-    ]
-end
+  def self.all
+    connection = PG.connect(dbname: 'chitter')
+    connection.exec("SELECT * FROM peeps;")
+    result = connection.exec('SELECT * FROM peeps')
+    result.map { |peeps| peeps['peep'] }
+  end
 end
