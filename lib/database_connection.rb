@@ -1,13 +1,7 @@
 # require 'pg'
 
-# class DatabaseConnection
+# p "Setting up test database..."
 
-#   def self.setup(dbname)
-#     @connection = PG.connect(dbname: dbname)
-#   end
+# connection = PG.connect(dbname: 'chitter_test')
 
-#   def self.query(sql_query)
-#     @connection.exec(sql_query)
-#   end
-
-# end
+# connection.exec("TRUNCATE peeps;")

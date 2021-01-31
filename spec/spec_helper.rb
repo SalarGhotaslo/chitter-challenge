@@ -1,4 +1,5 @@
 # Set the environment to "test"
+require_relative'./setup_test_database'
 ENV['RACK_ENV'] = 'test'
 
 # Bring in the contents of the `app.rb` file. The below is equivalent to: require_relative '../app.rb'
@@ -37,5 +38,8 @@ RSpec.configure do |config|
 
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
+  end
+  config.before(:each) do
+    setup_test_database
   end
 end

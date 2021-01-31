@@ -1,10 +1,11 @@
 require 'peep'
-
-describe Peep do
   describe '.all' do
-    it 'returns all peeps' do
-      peeps = Peep.all
+    it 'returns a list of peeps' do
+connection = PG.connect(dbname: 'chitter_test')
+
+# Add the test data
+connection.exec("INSERT INTO peeps (peep) VALUES ('Hello, this is my first peep');")
+peeps = Peep.all
       expect(peeps).to include("Hello, this is my first peep")
     end
   end
-end
