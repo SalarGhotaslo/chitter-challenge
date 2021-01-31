@@ -18,11 +18,12 @@ class Chitter < Sinatra::Base
 
   post '/peeps' do
    session[:peep] = params[:message_box]
-   redirect '/chitter'
+  redirect "/chitter"
   end
 
   get '/chitter' do
     @message_box = session[:peep]
+    # @Peep = Peep.all
     erb(:chitter)
   end
 
