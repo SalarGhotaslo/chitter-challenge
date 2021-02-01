@@ -9,3 +9,10 @@ peeps = Peep.all
       expect(peeps).to include("Hello, this is my first peep")
     end
   end
+  describe '.create' do
+    it 'creates a new peep' do
+      Peep.create(peep: 'new peep inserted')
+  
+      expect(Peep.all).to include 'new peep inserted'
+    end
+  end
