@@ -12,7 +12,8 @@ peeps = Peep.all
   describe '.create' do
     it 'creates a new peep' do
       Peep.create(peep: 'new peep inserted')
-  
-      expect(Peep.all).to include 'new peep inserted'
+      Peep.create('Testing new peep')
+      peeps = Peep.all
+      expect(peeps.first.message).to eq 'Testing new peep'
     end
   end

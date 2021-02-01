@@ -1,26 +1,11 @@
-require 'database_connection'
+require 'pg'
 
-describe DatabaseConnection do
-  context '.setup' do
-    it 'sets a connection to a database using PG' do
-      expect(PG).to receive(:connect).with(dbname: 'chitter_test')
-
-      DatabaseConnection.setup('chitter_test')
-    end
-
-    it 'this connection is persistent' do
-    connection = DatabaseConnection.setup('chitter_test')
-    expect(DatabaseConnection.connection).to eq connection
-end
+class DatabaseConnection
+  def self.setup(dbname)
+    @connection = PG.connect(dbname: dbname)
   end
 
-  context '.query' do
-    it 'executes a query via PG' do
-      connection = DatabaseConnection.setup("chitter_test")
-
-      expect(connection).to receive(:exec).with("SELECT * FROM peeps;")
-
-      DatabaseConnection.query("SELECT * FROM peeps;")
-    end
+  def self.query(sql)
+    @connection.exec(sql)
   end
 end

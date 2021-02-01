@@ -1,56 +1,61 @@
+require_relative "lib/peep"
+require_relative "lib/user"
+require_relative 'lib/database_connection.rb'
+require 'uri'
 require 'sinatra/base'
-require './lib/peep.rb'
 
 class Chitter < Sinatra::Base
-  enable :sessions
+  enable :sessions, :method_override
+
   get '/' do
-    erb(:index)
+    erb :index
   end
 
-  get '/new_peeps' do
-    erb(:new_peeps)
-  end
-#   post '/view_peeps'do
-#   peep = params['peep']
-#   connection = PG.connect(dbname: 'chitter_test')
-#   connection.exec("INSERT INTO peeps (peep) VALUES('#{peep}')")
-#   redirect '/view_peeps'
-# end
-
-  post "/view_peeps" do
-    Peep.create(peep: params[:peep])
-    redirect('/view_peeps')
+  get '/user/new' do
+    erb :new_user
   end
 
-  get '/view_peeps' do
-    @peeps = Peep.all
-    erb(:view_peeps)
+  post '/user' do
+    user = User.create(params[:name], params[:username], params[:email], params[:password])
+    session[:user_id] = user.id
+    redirect '/peeps'
   end
+
+  get '/peeps' do
+    @user = User.find(session[:user_id])
+    @peeps = Peep.all.reverse
+    erb :peeps
+  end
+
+  get '/peeps/new' do
+    erb :new
+  end
+
+  post '/peeps' do
+    Peep.create(params[:message])
+    redirect '/peeps'
+  end
+
+  get '/sessions/new' do
+    erb :new_session
+  end
+
+  post '/sessions' do
+    user = User.authenticate(params[:email], params[:password])
+    if user
+      session[:user_id] = user.id
+      redirect('/peeps')
+    else
+      flash[:notice] = 'Please check your email or password.'
+      redirect('/sessions/new')
+    end
+  end
+
+  post '/sessions/destroy' do
+    session.clear
+    flash[:notice] = 'You have signed out.'
+    redirect('/')
+  end
+
   run! if app_file == $0
-
 end
-
-
-#   post '/enter_user_info' do
-#     session[:username_login] = params[:username]
-#     redirect '/signed_up'
-#   end
-
-#   get '/signed_up' do
-#     @username = session[:username_login]
-#     erb(:signed_up)
-#   end
-
-#   post '/peeps' do
-#    session[:peep] = params[:message_box]
-#   redirect "/chitter"
-#   end
-
-#   get '/chitter' do
-#     @message_box = session[:peep]
-#     # @Peep = Peep.all
-#     erb(:chitter)
-#   end
-
-#   run! if app_file == $0
-# end

@@ -9,4 +9,5 @@ group :test do
   gem 'simplecov-console', require: false
   gem 'sinatra'
   gem 'pg'
+  gem 'bcrypt'
 end
